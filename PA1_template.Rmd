@@ -6,11 +6,16 @@ output:
 ---
 ## 1. Code for reading in the dataset and/or processing the data
 ## Install knitr: install.packages('knitr', dependencies = TRUE)
+echo = TRUE
 
 library("knitr")
+
 library(plyr)
+
 library(ggplot2)
+
 library(grid)
+
 library(lattice)
 
 ## Loading and preprocessing the data
