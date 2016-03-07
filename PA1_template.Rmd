@@ -8,7 +8,7 @@ output: html_document
 This is an R Markdown document. 
 
 # Loading and preprocessing the data
-```{r}
+
 library("knitr")
 library(plyr)
 library(ggplot2)
@@ -22,18 +22,18 @@ names(totalsteps) <- c("eachdate","addsteps")
 intervalsteps <- aggregate(steps ~ interval,  data = activity, mean)
 maxsteps <- which.max(intervalsteps$steps)
 intervalsteps[maxsteps,]
-```
+
 
 # What is mean total number of steps taken per day?
-```{r}
+
 meansteps <- round(mean(totalsteps$addsteps, na.rm = TRUE))
 print(sprintf("Mean of total steps taken per day: %i ", meansteps))
 mediansteps <- median(totalsteps$addsteps, na.rm = TRUE)
 print(sprintf("Median of total steps taken per day: %i ", mediansteps))
-```
+
 
 # What is the average daily activity pattern?
-```{r, echo=TRUE}
+
 windows()
 
 with(totalsteps, {
@@ -44,16 +44,16 @@ with(totalsteps, {
     xlab="Dates",
     ylab="Number of Total Steps")
 })
-```
-```{r, echo=TRUE}
+
+
 windows()
 plot(intervalsteps$interval, intervalsteps$steps, type='l', col = "blue",
      main="Time Series Plor of Average number of steps taken", xlab="Interval (5-mins)", 
      ylab="Average number of steps across all days")
-```
+
 
 # Imputing missing values
-```{r}
+
 activitynomissingvalues <- na.omit(activity)
 missingrows <- nrow(activity) - nrow(activitynomissingvalues)
 print(sprintf("Total Row count with NA data: %i ", missingrows))
@@ -71,10 +71,10 @@ newmediansteps <- median(totalstepsnomissinvalue$newaddsteps)
 print(sprintf("Median of total steps taken per day: %i ", newmediansteps))
 
 print("Mean stay the same for both cases and Median is smaller for data without missing value")
-```
 
 
-```{r, echo=TRUE}
+
+
 windows()
 
 with(totalstepsnomissinvalue, {
@@ -85,20 +85,18 @@ with(totalstepsnomissinvalue, {
     xlab="Dates",
     ylab="Number of Total Steps")
 })
-```
+
 
 
 # Are there differences in activity patterns between weekdays and weekends?
-```{r}
+
 newactivity$daytype <- weekdays(as.Date(newactivity$date))
 
 newactivity$daytype[newactivity$daytype  %in% c('Saturday','Sunday') ] <- "weekend"
 newactivity$daytype[newactivity$daytype != "weekend"] <- "weekday"
 
 intervalstepsdaytype <- aggregate(steps ~ daytype + interval,data = newactivity,mean)
-```
 
-```{r, echo=TRUE}
 
 windows()
 xyplot(
@@ -110,27 +108,3 @@ xyplot(
   main = "Comparing the average number of steps across the week",
   layout=c(1,2)
 )
-```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
