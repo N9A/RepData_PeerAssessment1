@@ -1,22 +1,12 @@
----
-title: "PA1_template.md"
-author: "Naing Naing Aung"
-date: "March 7, 2016"
-output: 
-  html_document: 
-    keep_md: yes
-    toc: yes
-  pdf_document: 
-    fig_caption: yes
-    keep_tex: yes
-    number_sections: yes
-    toc: yes
----
+# PA1_template.md
+Naing Naing Aung  
+March 7, 2016  
 
 This is an R Markdown document. 
 
 # Loading and preprocessing the data
-```{r}
+
+```r
 library("knitr")
 library(plyr)
 library(ggplot2)
@@ -32,16 +22,34 @@ maxsteps <- which.max(intervalsteps$steps)
 intervalsteps[maxsteps,]
 ```
 
+```
+##     interval    steps
+## 104      835 206.1698
+```
+
 # What is mean total number of steps taken per day?
-```{r}
+
+```r
 meansteps <- round(mean(totalsteps$addsteps, na.rm = TRUE))
 print(sprintf("Mean of total steps taken per day: %i ", meansteps))
+```
+
+```
+## [1] "Mean of total steps taken per day: 10766 "
+```
+
+```r
 mediansteps <- median(totalsteps$addsteps, na.rm = TRUE)
 print(sprintf("Median of total steps taken per day: %i ", mediansteps))
 ```
 
+```
+## [1] "Median of total steps taken per day: 10765 "
+```
+
 # What is the average daily activity pattern?
-```{r, echo=TRUE}
+
+```r
 windows()
 
 with(totalsteps, {
@@ -53,21 +61,42 @@ with(totalsteps, {
     ylab="Number of Total Steps")
 })
 ```
-```{r, echo=TRUE}
+
+![](PA1_template_files/figure-html/unnamed-chunk-3-1.png)
+
+```r
 windows()
 plot(intervalsteps$interval, intervalsteps$steps, type='l', col = "blue",
      main="Time Series Plor of Average number of steps taken", xlab="Interval (5-mins)", 
      ylab="Average number of steps across all days")
 ```
 
+![](PA1_template_files/figure-html/unnamed-chunk-4-1.png)
+
 # Imputing missing values
-```{r}
+
+```r
 activitynomissingvalues <- na.omit(activity)
 missingrows <- nrow(activity) - nrow(activitynomissingvalues)
 print(sprintf("Total Row count with NA data: %i ", missingrows))
+```
+
+```
+## [1] "Total Row count with NA data: 2304 "
+```
+
+```r
 missingactivity <- subset(activity,is.na(activity$steps))
 datatopopulate <- rep(intervalsteps,8)
 names(datatopopulate) < c("inerval", "steps")
+```
+
+```
+##  [1] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+## [12] FALSE FALSE FALSE FALSE FALSE
+```
+
+```r
 missingactivity$steps <- round(datatopopulate$steps)
 newactivity <- rbind(activitynomissingvalues,missingactivity)
 totalstepsnomissinvalue <- aggregate(newactivity$steps, list(newactivity$date), sum)
@@ -75,14 +104,32 @@ names(totalstepsnomissinvalue) <- c("neweachdate","newaddsteps")
 
 newmeansteps <- round(mean(totalstepsnomissinvalue$newaddsteps))
 print(sprintf("Mean of total steps taken per day: %i ", newmeansteps))
+```
+
+```
+## [1] "Mean of total steps taken per day: 10766 "
+```
+
+```r
 newmediansteps <- median(totalstepsnomissinvalue$newaddsteps)
 print(sprintf("Median of total steps taken per day: %i ", newmediansteps))
+```
 
+```
+## [1] "Median of total steps taken per day: 10762 "
+```
+
+```r
 print("Mean stay the same for both cases and Median is smaller for data without missing value")
 ```
 
+```
+## [1] "Mean stay the same for both cases and Median is smaller for data without missing value"
+```
 
-```{r, echo=TRUE}
+
+
+```r
 windows()
 
 with(totalstepsnomissinvalue, {
@@ -95,9 +142,12 @@ with(totalstepsnomissinvalue, {
 })
 ```
 
+![](PA1_template_files/figure-html/unnamed-chunk-6-1.png)
+
 
 # Are there differences in activity patterns between weekdays and weekends?
-```{r}
+
+```r
 newactivity$daytype <- weekdays(as.Date(newactivity$date))
 
 newactivity$daytype[newactivity$daytype  %in% c('Saturday','Sunday') ] <- "weekend"
@@ -106,8 +156,8 @@ newactivity$daytype[newactivity$daytype != "weekend"] <- "weekday"
 intervalstepsdaytype <- aggregate(steps ~ daytype + interval,data = newactivity,mean)
 ```
 
-```{r, echo=TRUE}
 
+```r
 windows()
 xyplot(
   type="l",
@@ -119,6 +169,8 @@ xyplot(
   layout=c(1,2)
 )
 ```
+
+![](PA1_template_files/figure-html/unnamed-chunk-8-1.png)
 
 
 
